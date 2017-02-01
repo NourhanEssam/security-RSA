@@ -11,7 +11,7 @@ class BigInteger
 {
 private:
     string NumberString;
-    std::vector<long long int> NumberInteger;
+    vector<long long int> NumberInteger;
 public:
     BigInteger() {}
     BigInteger(string S)
@@ -30,15 +30,30 @@ public:
             }
         }
     }
-        void ShowContent()
-        {
-            std::vector<long long int>::reverse_iterator iterator;
+    void ShowContent()
+    {
+            vector<long long int>::reverse_iterator iterator;
             for(iterator = NumberInteger.rbegin(); iterator<NumberInteger.rend(); iterator++)
             {
                 cout<<*iterator;
             }
             cout<<endl;
+    }
+    BigInteger operator+(const BigInteger& SecondNumber)
+    {
+        bool carry = 0;
+        BigInteger result;
+        vector<long long int>::const_iterator iterator = NumberInteger.begin();
+        vector<long long int>::const_iterator Seconditerator = SecondNumber.NumberInteger.begin();
+        while(iterator!=NumberInteger.end() || Seconditerator!=SecondNumber.NumberInteger.end())
+        {
+            result.NumberInteger.push_back(*iterator + *Seconditerator);
+            iterator++;
+            Seconditerator++;
         }
+        cout<<"Supposed to add" <<endl;
+        return result;
+    }
 };
 
 int main()
@@ -46,6 +61,9 @@ int main()
     string ii;
     cin>>ii;
     BigInteger i = BigInteger(ii);
-    i.ShowContent();
+    cin>>ii;
+    BigInteger i2 = BigInteger(ii);
+    BigInteger i3 = i+i2;
+    i3.ShowContent();
     return 0;
 }
