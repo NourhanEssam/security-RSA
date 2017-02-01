@@ -17,16 +17,26 @@ public:
         NumberString = S;
         while (NumberString.length() > 0) {
             if(NumberString.length()<19)
-            {cout<< NumberString; break;}
+            {
+                NumberInteger.push_back(stoll(NumberString));
+                break;
+            }
             else
             {
-                string ss = NumberString.substr(NumberString.length()-18,NumberString.length());
-                long long int hh = stoll(ss);
-                cout << NumberString.substr(NumberString.length()-18,NumberString.length())<<endl;
+                NumberInteger.push_back(stoll(NumberString.substr(NumberString.length()-18,NumberString.length())));
                 NumberString.erase(NumberString.length()-18,NumberString.length());
             }
         }
     }
+        void PrintData()
+        {
+            std::vector<long long int>::const_iterator it1 = NumberInteger.begin();
+            while (it1 != NumberInteger.end())
+            {
+                cout << *it1<<endl;
+                it1++;
+            }
+        }
 };
 
 int main()
@@ -34,5 +44,6 @@ int main()
     string ii;
     cin>>ii;
     BigInteger i = BigInteger(ii);
+    i.PrintData();
     return 0;
 }
