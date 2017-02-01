@@ -5,6 +5,8 @@
 #include <iostream>
 using namespace std;
 
+#define PRECISION 18
+
 class BigInteger
 {
 private:
@@ -16,26 +18,26 @@ public:
     {
         NumberString = S;
         while (NumberString.length() > 0) {
-            if(NumberString.length()<19)
+            if(NumberString.length()<PRECISION-1)
             {
                 NumberInteger.push_back(stoll(NumberString));
                 break;
             }
             else
             {
-                NumberInteger.push_back(stoll(NumberString.substr(NumberString.length()-18,NumberString.length())));
-                NumberString.erase(NumberString.length()-18,NumberString.length());
+                NumberInteger.push_back(stoll(NumberString.substr(NumberString.length()-PRECISION,NumberString.length())));
+                NumberString.erase(NumberString.length()-PRECISION,NumberString.length());
             }
         }
     }
-        void PrintData()
+        void ShowContent()
         {
-            std::vector<long long int>::const_iterator it1 = NumberInteger.begin();
-            while (it1 != NumberInteger.end())
+            std::vector<long long int>::reverse_iterator iterator;
+            for(iterator = NumberInteger.rbegin(); iterator<NumberInteger.rend(); iterator++)
             {
-                cout << *it1<<endl;
-                it1++;
+                cout<<*iterator;
             }
+            cout<<endl;
         }
 };
 
@@ -44,6 +46,6 @@ int main()
     string ii;
     cin>>ii;
     BigInteger i = BigInteger(ii);
-    i.PrintData();
+    i.ShowContent();
     return 0;
 }
