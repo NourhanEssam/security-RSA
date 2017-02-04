@@ -1,4 +1,5 @@
 //g++ inputfile.cpp -o outputbinary
+//g++ -std=c++11 security-RSA.cpp -o rsa
 #include <cstdlib>
 #include <string>
 #include <vector>
@@ -6,6 +7,7 @@
 using namespace std;
 
 #define PRECISION 18
+#define MAX 1000000000000000000
 
 class BigInteger
 {
@@ -35,19 +37,28 @@ public:
             vector<long long int>::reverse_iterator iterator;
             for(iterator = NumberInteger.rbegin(); iterator<NumberInteger.rend(); iterator++)
             {
-                cout<<*iterator;
+                cout<<*iterator<<endl;
             }
             cout<<endl;
     }
     BigInteger operator+(const BigInteger& SecondNumber)
     {
-        bool carry = 0;
         BigInteger result;
         vector<long long int>::const_iterator iterator = NumberInteger.begin();
         vector<long long int>::const_iterator Seconditerator = SecondNumber.NumberInteger.begin();
+        int carry = 0;
         while(iterator!=NumberInteger.end() || Seconditerator!=SecondNumber.NumberInteger.end())
         {
-            result.NumberInteger.push_back(*iterator + *Seconditerator);
+            if((*iterator + *Seconditerator+carry)<MAX)
+            {
+                result.NumberInteger.push_back(*iterator + *Seconditerator+carry);
+                carry = 0;
+            }
+            else
+            {
+                result.NumberInteger.push_back((*iterator + *Seconditerator+carry)%MAX);
+                carry = 1;
+            }
             iterator++;
             Seconditerator++;
         }
