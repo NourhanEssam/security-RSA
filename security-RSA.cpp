@@ -1,5 +1,7 @@
 //g++ inputfile.cpp -o outputbinary
 //g++ -std=c++11 security-RSA.cpp -o rsa
+//12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871
+//2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473
 #include <cstdlib>
 #include <string>
 #include <vector>
@@ -20,7 +22,7 @@ public:
     {
         NumberString = S;
         while (NumberString.length() > 0) {
-            if(NumberString.length()<PRECISION-1)
+            if(NumberString.length()<=PRECISION-1)
             {
                 NumberInteger.push_back(stoll(NumberString));
                 break;
@@ -37,7 +39,7 @@ public:
             vector<long long int>::reverse_iterator iterator;
             for(iterator = NumberInteger.rbegin(); iterator<NumberInteger.rend(); iterator++)
             {
-                cout<<*iterator<<endl;
+                cout<<*iterator;
             }
             cout<<endl;
     }
@@ -47,20 +49,34 @@ public:
         vector<long long int>::const_iterator iterator = NumberInteger.begin();
         vector<long long int>::const_iterator Seconditerator = SecondNumber.NumberInteger.begin();
         int carry = 0;
-        while(iterator!=NumberInteger.end() || Seconditerator!=SecondNumber.NumberInteger.end())
+        while(1)
         {
-            if((*iterator + *Seconditerator+carry)<MAX)
+			if(iterator==NumberInteger.end())
+			{
+                if(Seconditerator==SecondNumber.NumberInteger.end()) break;
+				result.NumberInteger.push_back(*Seconditerator);
+                Seconditerator++;
+			}
+			else if(Seconditerator==SecondNumber.NumberInteger.end())
+			{
+                if(iterator==NumberInteger.end()) break;
+				result.NumberInteger.push_back(*iterator);
+				iterator++;
+			}
+            else if((*iterator + *Seconditerator+carry)<MAX)
             {
                 result.NumberInteger.push_back(*iterator + *Seconditerator+carry);
                 carry = 0;
+				iterator++;
+                Seconditerator++;
             }
-            else
+            else if((*iterator + *Seconditerator+carry)>=MAX)
             {
                 result.NumberInteger.push_back((*iterator + *Seconditerator+carry)%MAX);
                 carry = 1;
+				iterator++;
+                Seconditerator++;
             }
-            iterator++;
-            Seconditerator++;
         }
         cout<<"Supposed to add" <<endl;
         return result;
