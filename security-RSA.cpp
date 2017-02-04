@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 #define PRECISION 18
@@ -39,6 +40,8 @@ public:
             vector<long long int>::reverse_iterator iterator;
             for(iterator = NumberInteger.rbegin(); iterator<NumberInteger.rend(); iterator++)
             {
+                cout.fill( '0' );    
+                cout.width( 18 );
                 cout<<*iterator;
             }
             cout<<endl;
