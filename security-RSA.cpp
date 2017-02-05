@@ -84,6 +84,39 @@ public:
         cout<<"Supposed to add" <<endl;
         return result;
     }
+
+    BigInteger operator-(const BigInteger& SecondNumber)
+    {
+        BigInteger result;
+        vector<long long int>::const_iterator iterator = NumberInteger.begin();
+        vector<long long int>::const_iterator Seconditerator = SecondNumber.NumberInteger.begin();
+        int carry = 0;
+        while(1)
+        {
+            if(Seconditerator==SecondNumber.NumberInteger.end())
+            {
+                if(iterator==NumberInteger.end()) break;
+                result.NumberInteger.push_back(*iterator);
+                iterator++;
+            }
+            else if((*iterator - *Seconditerator+carry)>=0)
+            {
+                result.NumberInteger.push_back(*iterator - *Seconditerator+carry);
+                carry = 0;
+                iterator++;
+                Seconditerator++;
+            }
+            else if((*iterator - *Seconditerator+carry)<0)
+            {
+                result.NumberInteger.push_back((*iterator - *Seconditerator+carry+MAX));
+                carry = -1;
+                iterator++;
+                Seconditerator++;
+            }
+        }
+        cout<<"Supposed to subtract" <<endl;
+        return result;
+    }
 };
 
 int main()
@@ -93,7 +126,7 @@ int main()
     BigInteger i = BigInteger(ii);
     cin>>ii;
     BigInteger i2 = BigInteger(ii);
-    BigInteger i3 = i+i2;
+    BigInteger i3 = i-i2;
     i3.ShowContent();
     return 0;
 }
