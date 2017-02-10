@@ -21,28 +21,29 @@ private:
     long long int NumberInteger[capacity] = {0};
     //vector<long long int> NumberInteger;
     bool isNegative;
+    int size;
 public:
     BigInteger() {}
     BigInteger(string S)
     {
-        int i = 0;
+        size = 0;
         NumberString = S;        
         while (NumberString.length() > 0) {
             if(NumberString.length()<=(PRECISION/2)-1)
             {
-                NumberInteger[capacity-1-i++] = stoll(NumberString);
+                NumberInteger[capacity-1-size++] = stoll(NumberString);
                 break;
             }
             else
             {
-                NumberInteger[capacity-1-i++] = stoll(NumberString.substr(NumberString.length()-PRECISION/2,NumberString.length()));
+                NumberInteger[capacity-1-size++] = stoll(NumberString.substr(NumberString.length()-PRECISION/2,NumberString.length()));
                 NumberString.erase(NumberString.length()-PRECISION/2,NumberString.length());
             }
         }
     }
     void ShowContent()
     {
-        for(int i=0;i<capacity;i++)
+        for(int i=capacity-size;i<capacity;i++)
             {
                 cout.fill( '0' );    
                 cout.width( PRECISION/2 );
@@ -54,8 +55,7 @@ public:
    //  BigInteger operator+(const BigInteger& SecondNumber)
    //  {
    //      BigInteger result;
-   //      int carry = 0;
-   //      int i=0,j=0;
+   //      int carry = 0,i=0,j=0;
    //      while(1)
    //      {
 			// if(iterator==NumberInteger.end())
