@@ -117,6 +117,44 @@ public:
         cout<<"Supposed to subtract" <<endl;
         return result;
     }
+
+    BigInteger operator*(const BigInteger& SecondNumber)
+    {
+        BigInteger result;
+        vector<long long int>::const_iterator iterator = NumberInteger.begin();
+        vector<long long int>::const_iterator Seconditerator = SecondNumber.NumberInteger.begin();
+        int carry;
+        for (vector<long long int>::const_iterator iterator=NumberInteger.begin(); iterator < NumberInteger.end(); iterator++)
+        {
+            carry = 0;
+            BigInteger temp;
+            cout<<"temp fady  ";
+                 temp.ShowContent();
+            for (vector<long long int>::const_iterator Seconditerator=SecondNumber.NumberInteger.begin(); Seconditerator < SecondNumber.NumberInteger.end(); Seconditerator++)
+            {
+                if(((*iterator * *Seconditerator)+carry) >=MAX)
+                {
+                    carry = 1;
+                }
+            else
+            {
+                carry = 0;
+            }
+            temp.NumberInteger.push_back(((*iterator * *Seconditerator)+carry)%MAX);
+                 //temp.NumberInteger.push_back(*iterator * *Seconditerator);
+                // result = result + (*iterator * *Seconditerator);
+                 //result = result + temp + carry;
+                 cout<<"temp  ";
+                 temp.ShowContent();
+                //temp.NumberInteger.erase(temp.NumberInteger.begin());
+            }
+            result = result + temp;
+            cout<<"result  ";
+                result.ShowContent();
+        }
+        cout<<"Supposed to Multiply" <<endl;
+        return result;
+    }
 };
 
 int main()
@@ -126,7 +164,7 @@ int main()
     BigInteger i = BigInteger(ii);
     cin>>ii;
     BigInteger i2 = BigInteger(ii);
-    BigInteger i3 = i-i2;
+    BigInteger i3 = i*i2;
     i3.ShowContent();
     return 0;
 }
