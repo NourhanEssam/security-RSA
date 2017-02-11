@@ -127,6 +127,10 @@ public:
         cout<<"Supposed to subtract" <<endl;
         return result;
     }
+    BigInteger operator*(const BigInteger& SecondNumber)
+    {
+        
+    }
 };
 
 int main()
