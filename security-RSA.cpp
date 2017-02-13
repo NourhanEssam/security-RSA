@@ -53,6 +53,7 @@ public:
     {
         BigInteger result;
         int carry=0,i=0,j=0;
+        cout<<"adding"<<endl;
         while(1)
         {
             if(i==size)
@@ -151,6 +152,10 @@ public:
             temp.NumberInteger[-(capacity-1-i-j)] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX_Mul;
             temp.size = capacity+(capacity-1-i-j);
             result = result + temp;
+            cout << "temp  "<<endl;
+            temp.ShowContent();
+            cout << "result  "<<endl;
+            result.ShowContent();
             }
         }
         cout<<"Supposed to Multiply" <<endl;
