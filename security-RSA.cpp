@@ -133,39 +133,19 @@ public:
         int carry;
         for (int i=capacity-1; i>=capacity-size; i--)
         {        
-        cout<<"loop"    <<endl;
             carry = 0;
             for (int j=capacity-1; j>=capacity-SecondNumber.size; j--)
             {
                 BigInteger temp;
-                if(((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry) >= MAX_Mul)
-                {
+            if(((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry) >= MAX_Mul)
                     carry = 1;
-                    cout<<"carry "<<carry<<endl;
-                }
             else
-            {
                 carry = 0;
-                cout<<"carry "<<carry<<endl;
-            }
-            //cout << "here     "<<-(capacity-1-i-j)<<"  "<<capacity+(capacity-1-i-j)<<endl ;
-            //temp.NumberInteger[capacity-1-(capacity-i)-(capacity-j)] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX;
             cout << NumberInteger[i] <<"  " <<SecondNumber.NumberInteger[j] << "  " <<carry<<endl;
             temp.NumberInteger[-(capacity-1-i-j)] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX_Mul;
             temp.size = capacity+(capacity-1-i-j);
-            //cout<<((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX<<endl;
-                 //temp.NumberInteger.push_back(*iterator * *Seconditerator);
-                // result = result + (*iterator * *Seconditerator);
-                 //result = result + temp + carry;
-                //temp.NumberInteger.erase(temp.NumberInteger.begin());
             result = result + temp;
-            // cout<<"ahom"<<endl;
-            // temp.ShowContent();
-            cout<<"result  "<<endl;
-            result.ShowContent();
             temp.ShowContent();
-            // cout<<"last"<<endl;
-            //cout << ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX << "  " <<carry << endl;
             }
         }
         cout<<"Supposed to Multiply" <<endl;
