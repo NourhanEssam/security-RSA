@@ -131,6 +131,10 @@ public:
     {
         BigInteger result;
         int carry;
+        
+        if(isNegative == SecondNumber.isNegative) result.isNegative = false;
+        else if(isNegative != SecondNumber.isNegative) result.isNegative = true;
+
         for (int i=capacity-1; i>=capacity-size; i--)
         {        
             carry = 0;
