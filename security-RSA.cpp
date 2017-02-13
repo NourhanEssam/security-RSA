@@ -112,7 +112,8 @@ public:
                 if(j==SecondNumber.size)
                 {
                     if(i==size) break;
-                    result.NumberInteger[capacity-1-result.size++] = NumberInteger[capacity-1-i++];
+                    result.NumberInteger[capacity-1-result.size++] = NumberInteger[capacity-1-i++]+carry;
+                    carry = 0;
                 }
                 else if((NumberInteger[capacity-1-i] - SecondNumber.NumberInteger[capacity-1-j]+carry)>=0)
                 {
