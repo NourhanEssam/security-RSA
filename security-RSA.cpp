@@ -131,34 +131,41 @@ public:
     {
         BigInteger result;
         int carry;
-        cout<<"out"<<endl;
-        for (int i=capacity-1; i>=0; i--)
-        {
-            cout<<"in 1"<<endl;
+        for (int i=capacity-1; i>=capacity-size; i--)
+        {        
+        cout<<"loop"    <<endl;
             carry = 0;
-            for (int j=capacity-1; j>=0; j--)
+            for (int j=capacity-1; j>=capacity-SecondNumber.size; j--)
             {
-                cout<<"in 2"<<endl;
                 BigInteger temp;
-                if(((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry) >=MAX_Mul)
+                if(((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry) >= MAX_Mul)
                 {
-                    cout<<"C=1"<<endl;
                     carry = 1;
+                    cout<<"carry "<<carry<<endl;
                 }
             else
             {
-                cout<<"C=0"<<endl;
                 carry = 0;
+                cout<<"carry "<<carry<<endl;
             }
-            cout<<"before fill"<<endl;
-            temp.NumberInteger[capacity-1-result.size++-i-j] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX;
+            //cout << "here     "<<-(capacity-1-i-j)<<"  "<<capacity+(capacity-1-i-j)<<endl ;
+            //temp.NumberInteger[capacity-1-(capacity-i)-(capacity-j)] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX;
+            cout << NumberInteger[i] <<"  " <<SecondNumber.NumberInteger[j] << "  " <<carry<<endl;
+            temp.NumberInteger[-(capacity-1-i-j)] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX_Mul;
+            temp.size = capacity+(capacity-1-i-j);
+            //cout<<((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX<<endl;
                  //temp.NumberInteger.push_back(*iterator * *Seconditerator);
                 // result = result + (*iterator * *Seconditerator);
                  //result = result + temp + carry;
                 //temp.NumberInteger.erase(temp.NumberInteger.begin());
-            cout<<"after fill"<<endl;
             result = result + temp;
-            cout<<"added"<<endl;
+            // cout<<"ahom"<<endl;
+            // temp.ShowContent();
+            cout<<"result  "<<endl;
+            result.ShowContent();
+            temp.ShowContent();
+            // cout<<"last"<<endl;
+            //cout << ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX << "  " <<carry << endl;
             }
         }
         cout<<"Supposed to Multiply" <<endl;
@@ -169,11 +176,11 @@ public:
 int main()
 {
     //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
-    string ii = "12";
+    string ii = "1111111111111111111111";
     //cin>>ii;
     BigInteger i = BigInteger(ii);
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
-    ii = "1";
+    ii = "12";
     //cin>>ii;
     BigInteger i2 = BigInteger(ii);
     BigInteger i3 = i*i2;
