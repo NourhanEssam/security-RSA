@@ -8,9 +8,9 @@ using namespace std;
 
 #define PRECISION 18
 #define MAX_Mul 1000000000000000000
-#define MAX 1000000000
-//#define MAX 1000000000000000000
-#define capacity 40
+//#define MAX 1000000000
+#define MAX 1000000000000000000
+#define capacity 100
 
 class BigInteger
 {
@@ -43,7 +43,7 @@ public:
         for(int i=capacity-size;i<capacity;i++)
         {
             cout.fill( '0' );
-            cout.width( PRECISION/2 );
+            cout.width( PRECISION );
             cout<<NumberInteger[i];
         }
         cout<<endl;
@@ -140,15 +140,17 @@ public:
         else if(isNegative != SecondNumber.isNegative) result.isNegative = true;
 
         for (int i=capacity-1; i>=capacity-size; i--)
-        {        
+        {
             carry = 0;
             for (int j=capacity-1; j>=capacity-SecondNumber.size; j--)
             {
                 BigInteger temp;
             if(((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry) >= MAX_Mul)
-                    carry = 1;
+                    //carry = 1;
+                carry = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX_Mul;
             else
                 carry = 0;
+            cout << NumberInteger[i] << " " << SecondNumber.NumberInteger[j]<< " " <<carry;
             temp.NumberInteger[-(capacity-1-i-j)] = ((NumberInteger[i] * SecondNumber.NumberInteger[j])+carry)%MAX_Mul;
             temp.size = capacity+(capacity-1-i-j);
             result = result + temp;
@@ -166,11 +168,13 @@ public:
 int main()
 {
     //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
-    string ii = "121233111221212123344556434343654344444221";
+    //string ii = "121233111221212123344556434343654344444221";
+    string ii = "111";
     //cin>>ii;
     BigInteger i = BigInteger(ii);
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
-    ii = "121222222222222222121212";
+    //ii = "121222222222222222121212";
+    ii = "76508367834915852";
     //cin>>ii;
     BigInteger i2 = BigInteger(ii);
     BigInteger i3 = i*i2;
