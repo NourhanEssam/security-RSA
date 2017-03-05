@@ -38,6 +38,13 @@ public:
             }
         }
     }
+
+    BigInteger(int i)
+    {
+        NumberInteger[capacity-1] = i;
+        size = 1;
+    }
+
     void ShowContent()
     {
         cout<<NumberInteger[0];
@@ -162,15 +169,21 @@ public:
     }
 
 
-    BigInteger divide(BigInteger SecondNumber)
+    BigInteger divide(BigInteger dividor)
     {
         BigInteger result;
         BigInteger rem ,qou;
+        BigInteger dividor_multiples[6];
 
-        while(1)
+        for (int i=0 ; i<6 ; i++)
         {
-
+            dividor_multiples[i] = dividor * BigInteger(2*(i+1));
         }
+
+//        while(1)
+//        {
+
+//        }
 
         return result;
     }
@@ -248,7 +261,7 @@ int main()
     ii = "9";
     //cin>>ii;
     BigInteger i2 = BigInteger(ii);
-    //BigInteger i3 = i/i2;
+    //BigInteger i3 = i*i2;
     BigInteger i3 = i.divide(i2);
     i3.ShowContent();
     return 0;
