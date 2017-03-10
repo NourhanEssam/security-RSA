@@ -165,27 +165,69 @@ public:
                 }
             }
         }
+        if(result.NumberInteger[capacity-result.size]==0) result.size--;
         return result;
     }
 
 
+    bool GreaterorEqual(BigInteger& x,BigInteger& y)
+    {
+        if(x.size>y.size) return true;
+        else if (y.size>x.size) return false;
+        else {
+            for(int i=capacity-x.size;i<capacity;i++)
+            {
+                if(x.NumberInteger[i]>y.NumberInteger[i]) return true;
+                else if (y.NumberInteger[i]>x.NumberInteger[i]) return false;
+            }
+            return true;
+        }
+    }
+
+    bool GreaterOrEqual_part(BigInteger& x,BigInteger& y)
+    {
+        int j = capacity-y.size;
+        for(int i=capacity-x.size;i<capacity-x.size+y.size;i++)
+        {
+            if(x.NumberInteger[i]>y.NumberInteger[j]) return true;
+            else if (y.NumberInteger[j]>x.NumberInteger[i]) return false;
+            j++;
+        }
+        return true;
+    }
+
+    void operator=(const BigInteger& SecondNumber)
+    {
+        this->size = SecondNumber.size;
+        for(int i=0;i<capacity;i++)
+        {
+            this->NumberInteger[i] = SecondNumber.NumberInteger[i];
+        }
+        this->isNegative = SecondNumber.isNegative;
+    }
+
     BigInteger divide(BigInteger dividor)
     {
-        BigInteger result;
-        BigInteger rem ,qou;
-        BigInteger dividor_multiples[6];
+        BigInteger rem = *this ,qou = 0;
+        BigInteger dividor_multiples[100];
 
-        for (int i=0 ; i<6 ; i++)
+        for (int i=0 ; i<100 ; i++)
         {
             dividor_multiples[i] = dividor * BigInteger(2*(i+1));
         }
+        dividor_multiples[99].ShowContent();
 
-//        while(1)
+        int count_multiples = 99;
+
+//        while(GreaterorEqual(rem,dividor))
 //        {
-
+//            //divide
+//            cout<<GreaterOrEqual_part(dividor_multiples[count_multiples],rem)<<endl;
+//            count_multiples --;
+//            if(count_multiples == 0) break;
 //        }
 
-        return result;
+        return rem;
     }
 
 
@@ -252,13 +294,13 @@ int main()
     //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
     //string ii = "121233111221212123344556434343654344444221";
     //string ii = "111";
-    string ii = "1";
+    string ii = "19999999999999111999000000000000000000000000000000000000000000000000000000009999999999999999999999999999999999999999999999999999999999991111111111";
     //cin>>ii;
     BigInteger i = BigInteger(ii);
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
     //ii = "121222222222222222121212";
     //ii = "76508367834915852";
-    ii = "9";
+    ii = "1999999999999911111111111";
     //cin>>ii;
     BigInteger i2 = BigInteger(ii);
     //BigInteger i3 = i*i2;
