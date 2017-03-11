@@ -187,10 +187,25 @@ public:
     bool GreaterOrEqual_part(BigInteger& x,BigInteger& y)
     {
         int j = capacity-y.size;
+        cout<<"hahahahha   "<<capacity-x.size<<"  "<<capacity-x.size+y.size<<endl;
         for(int i=capacity-x.size;i<capacity-x.size+y.size;i++)
         {
+            cout<<x.NumberInteger[i]<<"  "<<y.NumberInteger[j]<<endl;
             if(x.NumberInteger[i]>y.NumberInteger[j]) return true;
-            else if (y.NumberInteger[j]>x.NumberInteger[i]) return false;
+            else if(x.NumberInteger[i]<y.NumberInteger[j]) return false;
+            j++;
+        }
+        return true;
+    }
+
+    bool GreaterOrEqual_part(BigInteger& x,BigInteger& y,int till)
+    {
+        if(till>y.size) return true;
+        int j = capacity-y.size;
+        for(int i=capacity-x.size;i<capacity-x.size+till;i++)
+        {
+            if(x.NumberInteger[i]>y.NumberInteger[j]) return true;
+            else if(x.NumberInteger[i]<y.NumberInteger[j]) return false;
             j++;
         }
         return true;
@@ -210,83 +225,30 @@ public:
     {
         BigInteger rem = *this ,qou = 0;
         BigInteger dividor_multiples[100];
+        int part_size;
 
         for (int i=0 ; i<100 ; i++)
         {
             dividor_multiples[i] = dividor * BigInteger(2*(i+1));
         }
-        dividor_multiples[99].ShowContent();
 
-        int count_multiples = 99;
+        while(GreaterorEqual(rem,dividor))
+        {
+            if(!GreaterOrEqual_part(rem,dividor,dividor.size)) part_size = dividor.size + 1;
+            else part_size = dividor.size;
 
-//        while(GreaterorEqual(rem,dividor))
-//        {
-//            //divide
-//            cout<<GreaterOrEqual_part(dividor_multiples[count_multiples],rem)<<endl;
-//            count_multiples --;
-//            if(count_multiples == 0) break;
-//        }
+            int count_multiples = 99;
+            while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
+            {
+                count_multiples --;
+            }
+            BigInteger dividor_multiple = dividor_multiples[count_multiples] * BigInteger(to_string(pow(10,rem.size-part_size)));;
+            rem = rem-dividor_multiple;
+            rem.ShowContent();
+        }
 
         return rem;
     }
-
-
-    //    BigInteger divide(BigInteger SecondNumber)
-    //    {
-    //        BigInteger result;
-    //        long long int power = 0;
-    //        BigInteger MultiplyingNumbers;
-    //        bool LessThan;
-
-    //        while (1) {
-    //            // ageeb power value lel rakam
-    //            BigInteger powerValue (to_string(pow(2,power)));
-
-    //            //adrabo fe secondNumber
-    //            MultiplyingNumbers = SecondNumber * powerValue;
-
-
-    //            //a3ml check bel size lw ana mn l awel 5ales w ashof l asly.size l7ad 3dadhom lw akbar
-    //            //mn capacity-size ha3ml check b loop hwa akbar wla as3'ar
-    //            for(int i=0; i<MultiplyingNumbers.size; i++)
-    //            {
-    //                if(NumberInteger[capacity-size-i] < MultiplyingNumbers[capacity-MultiplyingNumbers.size-i])
-    //                {
-    //                    break;
-    //                }
-    //            }
-
-    //            //a3ml minus w a3ml add lel power value 3al result w a5aly power be zero tany w a3adel l rakam l asly be dah minus dah
-
-    //            //lw as3'ar hzawed l power value tany w agrab fe nafs l loop
-
-
-    //        }
-
-    ////        while (1) {
-    ////               if()
-
-
-    ////            //if(SecondNumber.size > size || (SecondNumber.size == size && NumberInteger[capacity-size] < SecondNumber.NumberInteger[capacity-size]))
-    ////        }
-    //        return result;
-    //    }
-
-    //    BigInteger operator/(const BigInteger& SecondNumber)
-    //    {
-    //        BigInteger result;
-    //        //int power = 0;
-    //        BigInteger x("1");
-    //        x.ShowContent();
-    //        SecondNumber * x;
-    //        while (1) {
-    ////               if()
-
-
-    ////            //if(SecondNumber.size > size || (SecondNumber.size == size && NumberInteger[capacity-size] < SecondNumber.NumberInteger[capacity-size]))
-    ////        }
-    //        return result;
-    //    }
 };
 
 int main()
