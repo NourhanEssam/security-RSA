@@ -135,7 +135,6 @@ public:
                 }
             }
         }
-        cout<<"Supposed to subtract" <<endl;
         return result;
     }
     BigInteger operator*(const BigInteger& SecondNumber)
@@ -169,6 +168,15 @@ public:
         return result;
     }
 
+    void operator=(const BigInteger& SecondNumber)
+    {
+        this->size = SecondNumber.size;
+        for(int i=0;i<capacity;i++)
+        {
+            this->NumberInteger[i] = SecondNumber.NumberInteger[i];
+        }
+        this->isNegative = SecondNumber.isNegative;
+    }
 
     bool GreaterorEqual(BigInteger& x,BigInteger& y)
     {
@@ -184,20 +192,6 @@ public:
         }
     }
 
-    bool GreaterOrEqual_part(BigInteger& x,BigInteger& y)
-    {
-        int j = capacity-y.size;
-        cout<<"hahahahha   "<<capacity-x.size<<"  "<<capacity-x.size+y.size<<endl;
-        for(int i=capacity-x.size;i<capacity-x.size+y.size;i++)
-        {
-            cout<<x.NumberInteger[i]<<"  "<<y.NumberInteger[j]<<endl;
-            if(x.NumberInteger[i]>y.NumberInteger[j]) return true;
-            else if(x.NumberInteger[i]<y.NumberInteger[j]) return false;
-            j++;
-        }
-        return true;
-    }
-
     bool GreaterOrEqual_part(BigInteger& x,BigInteger& y,int till)
     {
         if(till>y.size) return true;
@@ -209,16 +203,6 @@ public:
             j++;
         }
         return true;
-    }
-
-    void operator=(const BigInteger& SecondNumber)
-    {
-        this->size = SecondNumber.size;
-        for(int i=0;i<capacity;i++)
-        {
-            this->NumberInteger[i] = SecondNumber.NumberInteger[i];
-        }
-        this->isNegative = SecondNumber.isNegative;
     }
 
     BigInteger divide(BigInteger dividor)
@@ -234,19 +218,34 @@ public:
 
         while(GreaterorEqual(rem,dividor))
         {
+            BigInteger newDiv;
+
             if(!GreaterOrEqual_part(rem,dividor,dividor.size)) part_size = dividor.size + 1;
             else part_size = dividor.size;
 
             int count_multiples = 99;
-            while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
+            if(GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
             {
-                count_multiples --;
+                BigInteger temp = dividor_multiples[count_multiples];
+                while(GreaterOrEqual_part(rem,temp,part_size))
+                {
+                    newDiv = temp;
+                    temp = temp * BigInteger(2);
+                    count_multiples ++;
+                }
             }
-            BigInteger dividor_multiple = dividor_multiples[count_multiples] * BigInteger(to_string(pow(10,rem.size-part_size)));;
+            else
+            {
+                while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
+                {
+                    count_multiples --;
+                }
+                newDiv = dividor_multiples[count_multiples];
+            }
+            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,rem.size-part_size)));;
             rem = rem-dividor_multiple;
-            rem.ShowContent();
+            qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,rem.size-part_size))));
         }
-
         return rem;
     }
 };
@@ -256,13 +255,13 @@ int main()
     //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
     //string ii = "121233111221212123344556434343654344444221";
     //string ii = "111";
-    string ii = "19999999999999111999000000000000000000000000000000000000000000000000000000009999999999999999999999999999999999999999999999999999999999991111111111";
+    string ii = "199999999999991119990000003232";
     //cin>>ii;
     BigInteger i = BigInteger(ii);
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
     //ii = "121222222222222222121212";
     //ii = "76508367834915852";
-    ii = "1999999999999911111111111";
+    ii = "19999992123211111";
     //cin>>ii;
     BigInteger i2 = BigInteger(ii);
     //BigInteger i3 = i*i2;
