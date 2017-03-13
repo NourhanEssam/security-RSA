@@ -95,7 +95,7 @@ public:
         int carry=0,i=0,j=0;
         while(1)
         {
-            if((size == SecondNumber.size && NumberInteger[capacity-1]<SecondNumber.NumberInteger[capacity-1]) || (size<SecondNumber.size))
+            if((size == SecondNumber.size && NumberInteger[capacity-size]<SecondNumber.NumberInteger[capacity-SecondNumber.size]) || (size<SecondNumber.size))
             {
                 result.isNegative = true;
                 if(j==size)
@@ -135,6 +135,7 @@ public:
                 }
             }
         }
+        if(result.NumberInteger[capacity-result.size]==0) result.size--;
         return result;
     }
     BigInteger operator*(const BigInteger& SecondNumber)
@@ -195,6 +196,7 @@ public:
     bool GreaterOrEqual_part(BigInteger& x,BigInteger& y,int till)
     {
         if(till>y.size) return true;
+        if(till<y.size) return false;
         int j = capacity-y.size;
         for(int i=capacity-x.size;i<capacity-x.size+till;i++)
         {
@@ -211,9 +213,11 @@ public:
         BigInteger dividor_multiples[100];
         int part_size;
 
-        for (int i=0 ; i<100 ; i++)
+        dividor_multiples[0] = dividor;
+
+        for (int i=1 ; i<100 ; i++)
         {
-            dividor_multiples[i] = dividor * BigInteger(2*(i+1));
+            dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
         }
 
         while(GreaterorEqual(rem,dividor))
@@ -233,6 +237,79 @@ public:
                     temp = temp * BigInteger(2);
                     count_multiples ++;
                 }
+                count_multiples -- ;;
+            }
+            else
+            {
+                while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
+                {
+                    count_multiples --;
+                }
+                newDiv = dividor_multiples[count_multiples];
+            }            
+
+            //shift
+            BigInteger dividor_multiple ;
+            BigInteger qou_part(pow(2,count_multiples));
+            int j = capacity-newDiv.size;
+            for(int i=capacity-newDiv.size-(rem.size-part_size);i<capacity;i++)
+            {
+                if(j>capacity-(rem.size-part_size)) break;
+                    dividor_multiple.NumberInteger[i] = newDiv.NumberInteger[j];
+                    j++;
+            }
+            dividor_multiple.size = newDiv.size+(rem.size-part_size);
+
+            BigInteger qou_processed ;
+            j = capacity-qou_part.size;
+            for(int i=capacity-qou_part.size-(rem.size-part_size);i<capacity;i++)
+            {
+                if(j>capacity-(rem.size-part_size)) break;
+                    qou_processed.NumberInteger[i] = qou_part.NumberInteger[j];
+                    j++;
+            }
+            qou_processed.size = qou_part.size+(rem.size-part_size);
+
+//            int sz1 = rem.size;
+//            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,(sz1-part_size)*8)));;
+            rem = rem-dividor_multiple;
+            //qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,sz1-part_size))));
+            qou = qou + qou_processed;
+        }
+        return qou;
+    }
+
+    BigInteger rem(BigInteger dividor)
+    {
+        BigInteger rem = *this ,qou = 0;
+        BigInteger dividor_multiples[100];
+        int part_size;
+
+        dividor_multiples[0] = dividor;
+
+        for (int i=1 ; i<100 ; i++)
+        {
+            dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
+        }
+
+        while(GreaterorEqual(rem,dividor))
+        {
+            BigInteger newDiv;
+
+            if(!GreaterOrEqual_part(rem,dividor,dividor.size)) part_size = dividor.size + 1;
+            else part_size = dividor.size;
+
+            int count_multiples = 99;
+            if(GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
+            {
+                BigInteger temp = dividor_multiples[count_multiples];
+                while(GreaterOrEqual_part(rem,temp,part_size))
+                {
+                    newDiv = temp;
+                    temp = temp * BigInteger(2);
+                    count_multiples ++;
+                }
+                count_multiples -- ;;
             }
             else
             {
@@ -242,9 +319,34 @@ public:
                 }
                 newDiv = dividor_multiples[count_multiples];
             }
-            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,rem.size-part_size)));;
+
+            //shift
+            BigInteger dividor_multiple ;
+            BigInteger qou_part(pow(2,count_multiples));
+            int j = capacity-newDiv.size;
+            for(int i=capacity-newDiv.size-(rem.size-part_size);i<capacity;i++)
+            {
+                if(j>capacity-(rem.size-part_size)) break;
+                    dividor_multiple.NumberInteger[i] = newDiv.NumberInteger[j];
+                    j++;
+            }
+            dividor_multiple.size = newDiv.size+(rem.size-part_size);
+
+            BigInteger qou_processed ;
+            j = capacity-qou_part.size;
+            for(int i=capacity-qou_part.size-(rem.size-part_size);i<capacity;i++)
+            {
+                if(j>capacity-(rem.size-part_size)) break;
+                    qou_processed.NumberInteger[i] = qou_part.NumberInteger[j];
+                    j++;
+            }
+            qou_processed.size = qou_part.size+(rem.size-part_size);
+
+//            int sz1 = rem.size;
+//            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,(sz1-part_size)*8)));;
             rem = rem-dividor_multiple;
-            qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,rem.size-part_size))));
+            //qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,sz1-part_size))));
+            qou = qou + qou_processed;
         }
         return rem;
     }
