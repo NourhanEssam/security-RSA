@@ -322,7 +322,6 @@ public:
 
             //shift
             BigInteger dividor_multiple ;
-            BigInteger qou_part(pow(2,count_multiples));
             int j = capacity-newDiv.size;
             for(int i=capacity-newDiv.size-(rem.size-part_size);i<capacity;i++)
             {
@@ -332,22 +331,17 @@ public:
             }
             dividor_multiple.size = newDiv.size+(rem.size-part_size);
 
-            BigInteger qou_processed ;
-            j = capacity-qou_part.size;
-            for(int i=capacity-qou_part.size-(rem.size-part_size);i<capacity;i++)
-            {
-                if(j>capacity-(rem.size-part_size)) break;
-                    qou_processed.NumberInteger[i] = qou_part.NumberInteger[j];
-                    j++;
-            }
-            qou_processed.size = qou_part.size+(rem.size-part_size);
-
 //            int sz1 = rem.size;
 //            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,(sz1-part_size)*8)));;
             rem = rem-dividor_multiple;
             //qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,sz1-part_size))));
             qou = qou + qou_processed;
         }
+        return rem;
+    }
+
+    BigInteger powerModular(BigInteger dividor)
+    {
         return rem;
     }
 };
