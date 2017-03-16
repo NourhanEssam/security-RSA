@@ -279,6 +279,29 @@ public:
         return qou;
     }
 
+    BigInteger divideByTwo()
+    {
+        BigInteger quo;
+        long long int temp=0;
+        for(int i=capacity-size; i<capacity ; i++)
+        {
+            temp = (temp%2) * MAX + NumberInteger[i];
+            quo.NumberInteger[i] = temp/2;
+            quo.size ++;
+        }
+        return quo;
+    }
+
+    BigInteger RemFromTwo()
+    {
+        long long int temp=0;
+        for(int i=capacity-size; i<capacity ; i++)
+        {
+            temp = (temp%2) * MAX + NumberInteger[i];
+        }
+        return (temp%2);
+    }
+
     BigInteger rem(BigInteger dividor)
     {
         BigInteger rem = *this ,qou = 0;
@@ -330,38 +353,56 @@ public:
                     j++;
             }
             dividor_multiple.size = newDiv.size+(rem.size-part_size);
-
-//            int sz1 = rem.size;
-//            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,(sz1-part_size)*8)));;
             rem = rem-dividor_multiple;
-            //qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,sz1-part_size))));
-            qou = qou + qou_processed;
         }
         return rem;
     }
 
-    BigInteger powerModular(BigInteger dividor)
+    BigInteger powerModular(BigInteger power, BigInteger mod)
     {
-        return rem;
+        BigInteger result = *this;
+        BigInteger zero (0);
+        bool odd;
+//        if(power.rem(2))
+//            odd = true;
+        while(1)
+        {
+            //odd
+            if(odd)
+            {
+
+            }
+            //even
+            result = result*result;
+            result = result.rem(mod);
+            power = power.divideByTwo();
+            power.ShowContent();
+        }
+        return result;
+
     }
 };
 
 int main()
 {
-    //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
+    string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
     //string ii = "121233111221212123344556434343654344444221";
     //string ii = "111";
-    string ii = "199999999999991119990000003232";
+    //string ii = "199999999999991119990000003232";
     //cin>>ii;
     BigInteger i = BigInteger(ii);
-    //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
+    ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
     //ii = "121222222222222222121212";
     //ii = "76508367834915852";
-    ii = "19999992123211111";
+    //ii = "19999992123211111";
     //cin>>ii;
     BigInteger i2 = BigInteger(ii);
     //BigInteger i3 = i*i2;
-    BigInteger i3 = i.divide(i2);
+    //BigInteger i3 = i.divide(i2);
+    //BigInteger i3 = i.rem(i2);
+    //BigInteger i3 = i.divideByTwo();
+    //BigInteger i3 = i.RemFromTwo();
+    BigInteger i3 = i.powerModular(BigInteger(20),i2);
     i3.ShowContent();
     return 0;
 }
