@@ -1,4 +1,4 @@
-//g++ -std=c++11 security-RSA.cpp -o rsa
+//g++ -O3 -std=c++11 security-RSA.cpp -o rsa
 #include <cstdlib>
 #include <string>
 #include <vector>
@@ -95,12 +95,13 @@ public:
     BigInteger operator-(const BigInteger& SecondNumber)
     {
         BigInteger result;
+        if(isNegative && !SecondNumber.isNegative || !isNegative && SecondNumber.isNegative) {result = *this + SecondNumber; result.isNegative = isNegative; return result;}
         int carry=0,i=0,j=0;
         while(1)
         {
-            if((size == SecondNumber.size && NumberInteger[capacity-size]<SecondNumber.NumberInteger[capacity-SecondNumber.size]) || (size<SecondNumber.size))
+            //if((size == SecondNumber.size && NumberInteger[capacity-size]<SecondNumber.NumberInteger[capacity-SecondNumber.size]) || (size<SecondNumber.size))
+            if(!GreaterorEqual(*this,SecondNumber))
             {
-                result.isNegative = true;
                 if(j==size)
                 {
                     if(i==SecondNumber.size) break;
@@ -117,9 +118,11 @@ public:
                     result.NumberInteger[capacity-1-result.size++] = SecondNumber.NumberInteger[capacity-1-i++] - NumberInteger[capacity-1-j++]+carry+MAX;
                     carry = -1;
                 }
+
+                if(!isNegative && !SecondNumber.isNegative) result.isNegative = true;
+                else result.isNegative = isNegative;
             }
             else{
-                result.isNegative = false;
                 if(j==SecondNumber.size)
                 {
                     if(i==size) break;
@@ -136,9 +139,12 @@ public:
                     result.NumberInteger[capacity-1-result.size++] = NumberInteger[capacity-1-i++] - SecondNumber.NumberInteger[capacity-1-j++]+carry+MAX;
                     carry = -1;
                 }
+                if(!isNegative && !SecondNumber.isNegative) result.isNegative = false;
+                else result.isNegative = SecondNumber.isNegative;
             }
         }
-        if(result.NumberInteger[capacity-result.size]==0) result.size--;
+        if(result.size != 0)
+            if(result.NumberInteger[capacity-result.size]==0) result.size--;
         return result;
     }
 
@@ -146,9 +152,12 @@ public:
     {
         BigInteger result;
         int carry;
+        bool sign;
 
-        if(isNegative == SecondNumber.isNegative) result.isNegative = false;
-        else if(isNegative != SecondNumber.isNegative) result.isNegative = true;
+        if(isNegative == SecondNumber.isNegative) sign = false;
+        else if(isNegative != SecondNumber.isNegative) sign = true;
+
+        //if(size == 1 && SecondNumber.size == 1) return BigInteger((NumberInteger[capacity-1]*SecondNumber.NumberInteger[capacity-1]));
 
         for (int i=capacity-1; i>=capacity-size; i--)
         {
@@ -169,7 +178,9 @@ public:
                 }
             }
         }
-        if(result.NumberInteger[capacity-result.size]==0) result.size--;
+        if(result.size != 0)
+            if(result.NumberInteger[capacity-result.size]==0) result.size--;
+        result.isNegative = sign;
         return result;
     }
 
@@ -178,6 +189,13 @@ public:
         BigInteger rem = *this ,qou = 0;
         BigInteger dividor_multiples[100];
         int part_size;
+
+        if(isNegative == dividor.isNegative) qou.isNegative = false;
+        else if(isNegative != dividor.isNegative) qou.isNegative = true;
+
+        if(isEqual(rem,dividor)) return BigInteger(1);
+        if(!GreaterorEqual(rem,dividor)) return BigInteger(0);
+        if(rem.size == 1 && dividor.size == 1) return BigInteger((rem.NumberInteger[capacity-1]/dividor.NumberInteger[capacity-1]));
 
         dividor_multiples[0] = dividor;
 
@@ -237,7 +255,8 @@ public:
             rem = rem-dividor_multiple;
             qou = qou + qou_processed;
         }
-        if(qou.NumberInteger[capacity-qou.size]==0) qou.size--;
+        if(qou.size != 0)
+            if(qou.NumberInteger[capacity-qou.size]==0) qou.size--;
         return qou;
     }
 
@@ -246,6 +265,9 @@ public:
         BigInteger rem = *this ,qou = 0;
         BigInteger dividor_multiples[100];
         int part_size;
+
+        if(isNegative == dividor.isNegative) rem.isNegative = false;
+        else if(isNegative != dividor.isNegative) rem.isNegative = true;
 
         dividor_multiples[0] = dividor;
 
@@ -293,7 +315,8 @@ public:
             dividor_multiple.size = newDiv.size+(rem.size-part_size);
             rem = rem-dividor_multiple;
         }
-        if(rem.NumberInteger[capacity-rem.size]==0) rem.size--;
+        if(rem.size != 0)
+            if(rem.NumberInteger[capacity-rem.size]==0) rem.size--;
         return rem;
     }
 
@@ -308,7 +331,7 @@ public:
     }
 
     //******************** Helping Functions ***************************//
-    bool GreaterorEqual(BigInteger& x,BigInteger& y)
+    bool GreaterorEqual(const BigInteger& x,const BigInteger& y)
     {
         if(x.size>y.size) return true;
         else if (y.size>x.size) return false;
@@ -322,7 +345,7 @@ public:
         }
     }
 
-    bool GreaterOrEqual_part(BigInteger& x,BigInteger& y,int till)
+    bool GreaterOrEqual_part(const BigInteger& x,const BigInteger& y,int till)
     {
         if(till>y.size) return true;
         if(till<y.size) return false;
@@ -336,6 +359,18 @@ public:
         return true;
     }
 
+    bool isEqual(const BigInteger& x,const BigInteger& y)
+    {
+        if(x.size!=y.size) return false;
+        bool equal = true;
+        int j = capacity-y.size;
+        for(int i=capacity-x.size;i<capacity;i++)
+        {
+            if(x.NumberInteger[i] != y.NumberInteger[j]) equal = false;
+            j++;
+        }
+        return equal;
+    }
 
     BigInteger divideByTwo()
     {
@@ -361,7 +396,7 @@ public:
         return (temp%2);
     }
 
-    //******************** Encryption Baasic Functions ***************************//
+    //******************** Encryption Basic Functions ***************************//
 
     BigInteger powerModular(BigInteger power, BigInteger mod)
     {
@@ -382,6 +417,78 @@ public:
         }
         return result;
     }
+
+    BigInteger MillerRabinPrimalityTest(BigInteger power, BigInteger mod)
+    {
+
+    }
+
+    BigInteger ExtendedEculidInverse(BigInteger m)
+    {
+        BigInteger A1("1"),A2("0"),A3=m,B1("0"),B2("1"),B3=*this,Q;
+        BigInteger temp1,temp2,temp3;
+        BigInteger temp4,temp5,temp6;
+
+        while (!isEqual(B3,BigInteger(1))) {
+
+            Q = A3.divide(B3);
+
+            long long int testA1 = A1.NumberInteger[capacity-1];
+            long long int testA2 = A2.NumberInteger[capacity-1];
+            long long int testA3 = A3.NumberInteger[capacity-1];
+            long long int testB1 = B1.NumberInteger[capacity-1];
+            long long int testB2 = B2.NumberInteger[capacity-1];
+            long long int testB3 = B3.NumberInteger[capacity-1];
+            long long int testQ = Q.NumberInteger[capacity-1];
+
+            temp1 = A1;
+            temp2 = A2;
+            temp3 = A3;
+
+            A1 = B1;
+            A2 = B2;
+            A3 = B3;
+
+            temp4 = Q*A1;
+            temp5 = Q*A2;
+            temp6 = Q*A3;
+
+            B1 = temp1-temp4;
+            B2 = temp2-temp5;
+            B3 = temp3-temp6;
+        }
+        if(B2.isNegative) {B2.isNegative = false; B2 = m - B2;}
+        return B2;
+
+        //        while (!isEqual(B3,BigInteger(1))) {
+
+        //            Q = A3.divide(B3);
+
+        //            temp1 = A1;
+        //            temp2 = A2;
+        //            temp3 = A3;
+
+        //            A1 = B1;
+        //            A2 = B2;
+        //            A3 = B3;
+        //            temp4 = Q*A1;
+        //            temp5 = Q*A2;
+        //            temp6 = Q*A3;
+
+        //            B1 = temp1-temp4;
+        //            //lw el 2 -ve hagma3 w set l sign
+        //            if(B1.isNegative) {B1.isNegative = false; B1 = m - B1;}
+        //            B2 = temp2-temp5;
+        //            if(B2.isNegative) {B2.isNegative = false; B2 = m - B2;}
+        //            B3 = temp3-temp6;
+        //            if(B3.isNegative) {B3.isNegative = false; B3 = m - B3;}
+        //        }
+        //        B2.rem(m).ShowContent();
+        //        return B2.rem(m);
+
+
+    }
+    //******************** Encryption ***************************//
 };
 
 int main()
@@ -393,7 +500,9 @@ int main()
     //string ii = "111";
     //string ii = "199999999999991119990000003232";
     //cin>>ii;
-    BigInteger i ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
+    BigInteger i ("14");
+    //BigInteger i ("14");
+    //BigInteger i ("1");
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
     //ii = "121222222222222222121212";
     //ii = "76508367834915852";
@@ -402,16 +511,11 @@ int main()
     //ii = "20650";
     //ii = "11292929";
     //cin>>ii;
-    BigInteger i2 ("2065011");
+    //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
     //BigInteger i4 ("11292929");
-    BigInteger i4 ("20650");
-    //BigInteger i3 = i*i2;
-    //BigInteger i3 = i.divide(i2);
-    //BigInteger i3 = i.divide(i2);
-    //BigInteger i3 = i.rem(i2);
-    //BigInteger i3 = i.divideByTwo();
-    //BigInteger i3 = i.RemFromTwo();
-    BigInteger i3 = i.powerModular(i2,i4);
+    BigInteger i2 ("103");
+    //BigInteger i2 ("103");
+    BigInteger i3 = i.ExtendedEculidInverse(i2);
     i3.ShowContent();
     return 0;
 }
