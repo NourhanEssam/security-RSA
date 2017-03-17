@@ -21,6 +21,7 @@ private:
     int size;
 public:
     BigInteger() {size=0;}
+    //******************** Constructors and Printing functions ***************************//
     BigInteger(string S)
     {
         size = 0;
@@ -56,6 +57,8 @@ public:
         }
         cout<<endl;
     }
+
+    //******************** Basic Operations ***************************//
 
     BigInteger operator+(const BigInteger& SecondNumber)
     {
@@ -138,6 +141,7 @@ public:
         if(result.NumberInteger[capacity-result.size]==0) result.size--;
         return result;
     }
+
     BigInteger operator*(const BigInteger& SecondNumber)
     {
         BigInteger result;
@@ -167,44 +171,6 @@ public:
         }
         if(result.NumberInteger[capacity-result.size]==0) result.size--;
         return result;
-    }
-
-    void operator=(const BigInteger& SecondNumber)
-    {
-        this->size = SecondNumber.size;
-        for(int i=0;i<capacity;i++)
-        {
-            this->NumberInteger[i] = SecondNumber.NumberInteger[i];
-        }
-        this->isNegative = SecondNumber.isNegative;
-    }
-
-    bool GreaterorEqual(BigInteger& x,BigInteger& y)
-    {
-        if(x.size>y.size) return true;
-        else if (y.size>x.size) return false;
-        else {
-            for(int i=capacity-x.size;i<capacity;i++)
-            {
-                if(x.NumberInteger[i]>y.NumberInteger[i]) return true;
-                else if (y.NumberInteger[i]>x.NumberInteger[i]) return false;
-            }
-            return true;
-        }
-    }
-
-    bool GreaterOrEqual_part(BigInteger& x,BigInteger& y,int till)
-    {
-        if(till>y.size) return true;
-        if(till<y.size) return false;
-        int j = capacity-y.size;
-        for(int i=capacity-x.size;i<capacity-x.size+till;i++)
-        {
-            if(x.NumberInteger[i]>y.NumberInteger[j]) return true;
-            else if(x.NumberInteger[i]<y.NumberInteger[j]) return false;
-            j++;
-        }
-        return true;
     }
 
     BigInteger divide(BigInteger dividor)
@@ -243,18 +209,17 @@ public:
             {
                 while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
                 {
-                    count_multiples --;
+                    count_multiples = count_multiples/2;
                 }
                 newDiv = dividor_multiples[count_multiples];
             }
 
-            //shift
             BigInteger dividor_multiple ;
             BigInteger qou_part(pow(2,count_multiples));
             int j = capacity-newDiv.size;
             for(int i=capacity-newDiv.size-(rem.size-part_size);i<capacity;i++)
             {
-                if(j>capacity-(rem.size-part_size)) break;
+                if(j>=capacity) break;
                 dividor_multiple.NumberInteger[i] = newDiv.NumberInteger[j];
                 j++;
             }
@@ -264,44 +229,16 @@ public:
             j = capacity-qou_part.size;
             for(int i=capacity-qou_part.size-(rem.size-part_size);i<capacity;i++)
             {
-                if(j>capacity-(rem.size-part_size)) break;
+                if(j>=capacity) break;
                 qou_processed.NumberInteger[i] = qou_part.NumberInteger[j];
                 j++;
             }
             qou_processed.size = qou_part.size+(rem.size-part_size);
-
-            //            int sz1 = rem.size;
-            //            BigInteger dividor_multiple = newDiv * BigInteger(to_string(pow(10,(sz1-part_size)*8)));;
             rem = rem-dividor_multiple;
-            //qou = qou + (BigInteger((count_multiples+1)*2) * BigInteger(to_string(pow(10,sz1-part_size))));
             qou = qou + qou_processed;
         }
         if(qou.NumberInteger[capacity-qou.size]==0) qou.size--;
         return qou;
-    }
-
-    BigInteger divideByTwo()
-    {
-        BigInteger quo;
-        long long int temp=0;
-        for(int i=capacity-size; i<capacity ; i++)
-        {
-            temp = (temp%2) * MAX + NumberInteger[i];
-            quo.NumberInteger[i] = temp/2;
-            quo.size ++;
-        }
-        if(quo.NumberInteger[capacity-quo.size]==0) quo.size--;
-        return quo;
-    }
-
-    long long int RemFromTwo()
-    {
-        long long int temp=0;
-        for(int i=capacity-size; i<capacity ; i++)
-        {
-            temp = (temp%2) * MAX + NumberInteger[i];
-        }
-        return (temp%2);
     }
 
     BigInteger rem(BigInteger dividor)
@@ -340,17 +277,16 @@ public:
             {
                 while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
                 {
-                    count_multiples --;
+                    count_multiples = count_multiples/2;
                 }
                 newDiv = dividor_multiples[count_multiples];
             }
 
-            //shift
             BigInteger dividor_multiple ;
             int j = capacity-newDiv.size;
             for(int i=capacity-newDiv.size-(rem.size-part_size);i<capacity;i++)
             {
-                if(j>capacity-(rem.size-part_size)) break;
+                if(j>=capacity) break;
                 dividor_multiple.NumberInteger[i] = newDiv.NumberInteger[j];
                 j++;
             }
@@ -361,57 +297,121 @@ public:
         return rem;
     }
 
+    void operator=(const BigInteger& SecondNumber)
+    {
+        this->size = SecondNumber.size;
+        for(int i=0;i<capacity;i++)
+        {
+            this->NumberInteger[i] = SecondNumber.NumberInteger[i];
+        }
+        this->isNegative = SecondNumber.isNegative;
+    }
+
+    //******************** Helping Functions ***************************//
+    bool GreaterorEqual(BigInteger& x,BigInteger& y)
+    {
+        if(x.size>y.size) return true;
+        else if (y.size>x.size) return false;
+        else {
+            for(int i=capacity-x.size;i<capacity;i++)
+            {
+                if(x.NumberInteger[i]>y.NumberInteger[i]) return true;
+                else if (y.NumberInteger[i]>x.NumberInteger[i]) return false;
+            }
+            return true;
+        }
+    }
+
+    bool GreaterOrEqual_part(BigInteger& x,BigInteger& y,int till)
+    {
+        if(till>y.size) return true;
+        if(till<y.size) return false;
+        int j = capacity-y.size;
+        for(int i=capacity-x.size;i<capacity-x.size+till;i++)
+        {
+            if(x.NumberInteger[i]>y.NumberInteger[j]) return true;
+            else if(x.NumberInteger[i]<y.NumberInteger[j]) return false;
+            j++;
+        }
+        return true;
+    }
+
+
+    BigInteger divideByTwo()
+    {
+        BigInteger quo;
+        long long int temp=0;
+        for(int i=capacity-size; i<capacity ; i++)
+        {
+            temp = (temp%2) * MAX + NumberInteger[i];
+            quo.NumberInteger[i] = temp/2;
+            quo.size ++;
+        }
+        if(quo.NumberInteger[capacity-quo.size]==0) quo.size--;
+        return quo;
+    }
+
+    long long int RemFromTwo()
+    {
+        long long int temp=0;
+        for(int i=capacity-size; i<capacity ; i++)
+        {
+            temp = (temp%2) * MAX + NumberInteger[i];
+        }
+        return (temp%2);
+    }
+
+    //******************** Encryption Baasic Functions ***************************//
+
     BigInteger powerModular(BigInteger power, BigInteger mod)
     {
-        BigInteger result = *this;
+        BigInteger base = *this;
+        BigInteger result (1);
         BigInteger zero (0);
-        bool odd;
-
-        if(power.RemFromTwo())
-            odd = true;
-        cout<<"odd "<<odd<<endl;
 
         while(GreaterorEqual(power,zero))
         {
-            //odd
-//            if(odd)
-//            {
-//                result = result*result;
-//                result = result.rem(mod);
-//            }
-            //even
-            result = result*result;
-            result = result.rem(mod);
+            if(power.RemFromTwo())
+            {
+                result = result*base;
+                result = result.rem(mod);
+            }
+            base = base*base;
+            base = base.rem(mod);
             power = power.divideByTwo();
         }
-        result.ShowContent();
         return result;
-
     }
 };
 
 int main()
 {
     //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
-    string ii = "1236998110188786567180";
+    //string ii = "1236998110188786567180";
+    //string ii = "1530164324610629353625736427547608653152400";
     //string ii = "121233111221212123344556434343654344444221";
     //string ii = "111";
     //string ii = "199999999999991119990000003232";
     //cin>>ii;
-    BigInteger i = BigInteger(ii);
+    BigInteger i ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
     //ii = "121222222222222222121212";
     //ii = "76508367834915852";
     //ii = "19999992123211111";
-    ii = "20650";
+    //ii = "20650";
+    //ii = "20650";
+    //ii = "11292929";
     //cin>>ii;
-    BigInteger i2 = BigInteger(ii);
+    BigInteger i2 ("2065011");
+    //BigInteger i4 ("11292929");
+    BigInteger i4 ("20650");
     //BigInteger i3 = i*i2;
+    //BigInteger i3 = i.divide(i2);
     //BigInteger i3 = i.divide(i2);
     //BigInteger i3 = i.rem(i2);
     //BigInteger i3 = i.divideByTwo();
     //BigInteger i3 = i.RemFromTwo();
-    BigInteger i3 = i.powerModular(BigInteger("11292929"),i2);
+    BigInteger i3 = i.powerModular(i2,i4);
     i3.ShowContent();
     return 0;
 }
