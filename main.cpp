@@ -102,7 +102,7 @@ public:
     BigInteger operator-(const BigInteger& SecondNumber)
     {
         BigInteger result;
-        if(isNegative && !SecondNumber.isNegative || !isNegative && SecondNumber.isNegative) {result = *this + SecondNumber; result.isNegative = isNegative; return result;}
+        if((isNegative && !SecondNumber.isNegative) || (!isNegative && SecondNumber.isNegative)) {result = *this + SecondNumber; result.isNegative = isNegative; return result;}
         int carry=0,i=0,j=0;
         while(1)
         {
@@ -269,8 +269,9 @@ public:
 
     BigInteger rem(BigInteger dividor)
     {
-        BigInteger rem = *this ,qou = 0;
-        BigInteger dividor_multiples[100];
+        BigInteger rem = *this;
+        int staticsize = 20;
+        BigInteger dividor_multiples[staticsize];
         int part_size;
 
         if(isNegative == dividor.isNegative) rem.isNegative = false;
@@ -278,7 +279,7 @@ public:
 
         dividor_multiples[0] = dividor;
 
-        for (int i=1 ; i<100 ; i++)
+        for (int i=1 ; i<staticsize ; i++)
         {
             dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
         }
@@ -290,14 +291,14 @@ public:
             if(!GreaterOrEqual_part(rem,dividor,dividor.size)) part_size = dividor.size + 1;
             else part_size = dividor.size;
 
-            int count_multiples = 99;
+            int count_multiples = staticsize-1;
             if(GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
             {
                 BigInteger temp = dividor_multiples[count_multiples];
                 while(GreaterOrEqual_part(rem,temp,part_size))
                 {
                     newDiv = temp;
-                    temp = temp * BigInteger(2);
+                    temp = temp * BigInteger(8);
                     count_multiples ++;
                 }
                 count_multiples -- ;;
@@ -513,18 +514,21 @@ int main()
 
         string P_str;
         cout << "P = "<<endl;
-        cin>>P_str;
-        BigInteger P(P_str);
+        //cin>>P_str;
+        //BigInteger P(P_str);
+        BigInteger P("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
 
         string Q_str;
         cout << "Q = "<<endl;
-        cin>>Q_str;
-        BigInteger Q(Q_str);
+        //cin>>Q_str;
+        //BigInteger Q(Q_str);
+        BigInteger Q("2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473");
 
         string E_str;
         cout << "E = "<<endl;
-        cin>>E_str;
-        BigInteger E(E_str);
+        //cin>>E_str;
+        //BigInteger E(E_str);
+        BigInteger E("65537");
 
         clock_t begin = clock();
 
