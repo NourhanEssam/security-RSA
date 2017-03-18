@@ -22,7 +22,7 @@ private:
 public:
     BigInteger() {size=0;}
     //******************** Constructors and Printing functions ***************************//
-    BigInteger(string S)
+    BigInteger(const string &S)
     {
         size = 0;
         NumberString = S;
@@ -40,7 +40,7 @@ public:
         }
     }
 
-    BigInteger(int i)
+    BigInteger(const int & i)
     {
         NumberInteger[capacity-1] = i;
         size = 1;
@@ -191,10 +191,11 @@ public:
         return result;
     }
 
-    BigInteger divide(BigInteger dividor)
+    BigInteger divide(const BigInteger& dividor)
     {
         BigInteger rem = *this ,qou = 0;
-        BigInteger dividor_multiples[100];
+        int staticsize = 20;
+        BigInteger dividor_multiples[staticsize];
         int part_size;
 
         if(isNegative == dividor.isNegative) qou.isNegative = false;
@@ -206,9 +207,10 @@ public:
 
         dividor_multiples[0] = dividor;
 
-        for (int i=1 ; i<100 ; i++)
+        for (int i=1 ; i<staticsize ; i++)
         {
-            dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
+            //dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
+            dividor_multiples[i] = dividor_multiples[i-1] + dividor_multiples[i-1];
         }
 
         while(GreaterorEqual(rem,dividor))
@@ -218,14 +220,15 @@ public:
             if(!GreaterOrEqual_part(rem,dividor,dividor.size)) part_size = dividor.size + 1;
             else part_size = dividor.size;
 
-            int count_multiples = 99;
+            int count_multiples = staticsize-1;
             if(GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
             {
                 BigInteger temp = dividor_multiples[count_multiples];
                 while(GreaterOrEqual_part(rem,temp,part_size))
                 {
                     newDiv = temp;
-                    temp = temp * BigInteger(2);
+                    //temp = temp * BigInteger(8);
+                    temp = temp + temp;
                     count_multiples ++;
                 }
                 count_multiples -- ;;
@@ -234,7 +237,7 @@ public:
             {
                 while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
                 {
-                    count_multiples = count_multiples/2;
+                    count_multiples = count_multiples - 1;
                 }
                 newDiv = dividor_multiples[count_multiples];
             }
@@ -267,7 +270,7 @@ public:
         return qou;
     }
 
-    BigInteger rem(BigInteger dividor)
+    BigInteger rem(const BigInteger & dividor)
     {
         BigInteger rem = *this;
         int staticsize = 20;
@@ -281,7 +284,8 @@ public:
 
         for (int i=1 ; i<staticsize ; i++)
         {
-            dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
+            //dividor_multiples[i] = dividor_multiples[i-1] * BigInteger(2);
+            dividor_multiples[i] = dividor_multiples[i-1] + dividor_multiples[i-1];
         }
 
         while(GreaterorEqual(rem,dividor))
@@ -298,7 +302,8 @@ public:
                 while(GreaterOrEqual_part(rem,temp,part_size))
                 {
                     newDiv = temp;
-                    temp = temp * BigInteger(8);
+                    //temp = temp * BigInteger(8);
+                    temp = temp + temp;
                     count_multiples ++;
                 }
                 count_multiples -- ;;
@@ -307,7 +312,7 @@ public:
             {
                 while(!GreaterOrEqual_part(rem,dividor_multiples[count_multiples],part_size))
                 {
-                    count_multiples = count_multiples/2;
+                    count_multiples = count_multiples - 1;
                 }
                 newDiv = dividor_multiples[count_multiples];
             }
@@ -406,8 +411,9 @@ public:
 
     //******************** Encryption Basic Functions ***************************//
 
-    BigInteger powerModular(BigInteger power, BigInteger mod)
+    BigInteger powerModular(const BigInteger & pow, const BigInteger & mod)
     {
+        BigInteger power = pow;
         BigInteger base = *this;
         BigInteger result (1);
         BigInteger zero (0);
@@ -428,8 +434,9 @@ public:
 
     bool MillerRabinPrimalityTest()
     {
-        BigInteger n_1 = *this-BigInteger(1);
-        BigInteger q = *this-BigInteger(1);
+        BigInteger n = *this;
+        BigInteger n_1 = n-BigInteger(1);
+        BigInteger q = n-BigInteger(1);
         int k = 0;
         while(q.RemFromTwo() == 0)
         {
@@ -438,7 +445,7 @@ public:
         }
         BigInteger a(2);
 
-        BigInteger apowq = a.powerModular(q,*this);
+        BigInteger apowq = a.powerModular(q,n);
         if(isEqual(apowq,BigInteger(1)))
             return true;
         if(isEqual(apowq,n_1))
@@ -447,15 +454,16 @@ public:
         for(int j=1; j<k; j++)
         {
             BigInteger apowjq_needmod = apowq * apowq;
-            BigInteger apowjq = apowjq_needmod.rem(*this);
+            BigInteger apowjq = apowjq_needmod.rem(n);
             if(isEqual(apowjq,n_1))
                 return true;
         }
         return false;
     }
 
-    BigInteger ExtendedEculidInverse(BigInteger m)
+    BigInteger ExtendedEculidInverse(const BigInteger & mod)
     {
+        BigInteger m = mod;
         BigInteger A2("0"),A3=m,B2("1"),B3=*this,Q;
         BigInteger temp2,temp3;
         BigInteger temp5,temp6;
@@ -552,7 +560,8 @@ int main()
         cout << "D = "<<endl;
         D.ShowContent();
 
-        BigInteger msg ("1976620216402300889624482718775150");
+        //BigInteger msg ("1976620216402300889624482718775150");
+        BigInteger msg ("19");
         cout << "msg = "<<endl;
         msg.ShowContent();
         BigInteger Enc_msg = msg.powerModular(E,N);
