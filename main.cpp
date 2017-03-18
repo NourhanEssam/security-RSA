@@ -89,6 +89,13 @@ public:
                 carry = 1;
             }
         }
+        if(carry){
+        result.NumberInteger[capacity-1-result.size] = result.NumberInteger[capacity-1-result.size]+carry;
+        result.size++;
+        }
+        if(result.size != 0)
+            while(result.NumberInteger[capacity-result.size]==0 && result.size != 0)
+                result.size--;
         return result;
     }
 
@@ -144,7 +151,7 @@ public:
             }
         }
         if(result.size != 0)
-            if(result.NumberInteger[capacity-result.size]==0) result.size--;
+            while(result.NumberInteger[capacity-result.size]==0 && result.size != 0) result.size--;
         return result;
     }
 
@@ -179,7 +186,7 @@ public:
             }
         }
         if(result.size != 0)
-            if(result.NumberInteger[capacity-result.size]==0) result.size--;
+            while(result.NumberInteger[capacity-result.size]==0 && result.size != 0) result.size--;
         result.isNegative = sign;
         return result;
     }
@@ -256,7 +263,7 @@ public:
             qou = qou + qou_processed;
         }
         if(qou.size != 0)
-            if(qou.NumberInteger[capacity-qou.size]==0) qou.size--;
+            while(qou.NumberInteger[capacity-qou.size]==0 && qou.size != 0) qou.size--;
         return qou;
     }
 
@@ -316,7 +323,7 @@ public:
             rem = rem-dividor_multiple;
         }
         if(rem.size != 0)
-            if(rem.NumberInteger[capacity-rem.size]==0) rem.size--;
+            while(rem.NumberInteger[capacity-rem.size]==0 && rem.size != 0) rem.size--;
         return rem;
     }
 
@@ -425,68 +432,27 @@ public:
 
     BigInteger ExtendedEculidInverse(BigInteger m)
     {
-        BigInteger A1("1"),A2("0"),A3=m,B1("0"),B2("1"),B3=*this,Q;
-        BigInteger temp1,temp2,temp3;
-        BigInteger temp4,temp5,temp6;
+        BigInteger A2("0"),A3=m,B2("1"),B3=*this,Q;
+        BigInteger temp2,temp3;
+        BigInteger temp5,temp6;
 
         while (!isEqual(B3,BigInteger(1))) {
-
             Q = A3.divide(B3);
 
-            long long int testA1 = A1.NumberInteger[capacity-1];
-            long long int testA2 = A2.NumberInteger[capacity-1];
-            long long int testA3 = A3.NumberInteger[capacity-1];
-            long long int testB1 = B1.NumberInteger[capacity-1];
-            long long int testB2 = B2.NumberInteger[capacity-1];
-            long long int testB3 = B3.NumberInteger[capacity-1];
-            long long int testQ = Q.NumberInteger[capacity-1];
-
-            temp1 = A1;
             temp2 = A2;
             temp3 = A3;
 
-            A1 = B1;
             A2 = B2;
             A3 = B3;
 
-            temp4 = Q*A1;
             temp5 = Q*A2;
             temp6 = Q*A3;
 
-            B1 = temp1-temp4;
             B2 = temp2-temp5;
             B3 = temp3-temp6;
         }
         if(B2.isNegative) {B2.isNegative = false; B2 = m - B2;}
         return B2;
-
-        //        while (!isEqual(B3,BigInteger(1))) {
-
-        //            Q = A3.divide(B3);
-
-        //            temp1 = A1;
-        //            temp2 = A2;
-        //            temp3 = A3;
-
-        //            A1 = B1;
-        //            A2 = B2;
-        //            A3 = B3;
-        //            temp4 = Q*A1;
-        //            temp5 = Q*A2;
-        //            temp6 = Q*A3;
-
-        //            B1 = temp1-temp4;
-        //            //lw el 2 -ve hagma3 w set l sign
-        //            if(B1.isNegative) {B1.isNegative = false; B1 = m - B1;}
-        //            B2 = temp2-temp5;
-        //            if(B2.isNegative) {B2.isNegative = false; B2 = m - B2;}
-        //            B3 = temp3-temp6;
-        //            if(B3.isNegative) {B3.isNegative = false; B3 = m - B3;}
-        //        }
-        //        B2.rem(m).ShowContent();
-        //        return B2.rem(m);
-
-
     }
     //******************** Encryption ***************************//
 };
@@ -500,7 +466,7 @@ int main()
     //string ii = "111";
     //string ii = "199999999999991119990000003232";
     //cin>>ii;
-    BigInteger i ("14");
+    BigInteger i ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
     //BigInteger i ("14");
     //BigInteger i ("1");
     //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
@@ -513,8 +479,8 @@ int main()
     //cin>>ii;
     //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
     //BigInteger i4 ("11292929");
+    //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
     BigInteger i2 ("103");
-    //BigInteger i2 ("103");
     BigInteger i3 = i.ExtendedEculidInverse(i2);
     i3.ShowContent();
     return 0;
