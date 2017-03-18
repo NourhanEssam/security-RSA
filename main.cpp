@@ -90,8 +90,8 @@ public:
             }
         }
         if(carry){
-        result.NumberInteger[capacity-1-result.size] = result.NumberInteger[capacity-1-result.size]+carry;
-        result.size++;
+            result.NumberInteger[capacity-1-result.size] = result.NumberInteger[capacity-1-result.size]+carry;
+            result.size++;
         }
         if(result.size != 0)
             while(result.NumberInteger[capacity-result.size]==0 && result.size != 0)
@@ -425,9 +425,32 @@ public:
         return result;
     }
 
-    BigInteger MillerRabinPrimalityTest(BigInteger power, BigInteger mod)
+    bool MillerRabinPrimalityTest()
     {
+        BigInteger n_1 = *this-BigInteger(1);
+        BigInteger q = *this-BigInteger(1);
+        int k = 0;
+        while(q.RemFromTwo() == 0)
+        {
+            q = q.divideByTwo();
+            k++;
+        }
+        BigInteger a(2);
 
+        BigInteger apowq = a.powerModular(q,*this);
+        if(isEqual(apowq,BigInteger(1)))
+            return true;
+        if(isEqual(apowq,n_1))
+            return true;
+
+        for(int j=1; j<k; j++)
+        {
+            BigInteger apowjq_needmod = apowq * apowq;
+            BigInteger apowjq = apowjq_needmod.rem(*this);
+            if(isEqual(apowjq,n_1))
+                return true;
+        }
+        return false;
     }
 
     BigInteger ExtendedEculidInverse(BigInteger m)
@@ -459,45 +482,84 @@ public:
 
 int main()
 {
-    //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
-    //string ii = "1236998110188786567180";
-    //string ii = "1530164324610629353625736427547608653152400";
-    //string ii = "121233111221212123344556434343654344444221";
-    //string ii = "111";
-    //string ii = "199999999999991119990000003232";
-    //cin>>ii;
-    BigInteger P ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
-    //BigInteger i ("14");
-    //BigInteger i ("1");
-    //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
-    //ii = "121222222222222222121212";
-    //ii = "76508367834915852";
-    //ii = "19999992123211111";
-    //ii = "20650";
-    //ii = "20650";
-    //ii = "11292929";
-    //cin>>ii;
-    //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
-    //BigInteger i4 ("11292929");
-    //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
-    clock_t begin = clock();
-    BigInteger Q ("2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473");
-    BigInteger E ("65537");
-    //BigInteger i3 = i.ExtendedEculidInverse(i2);
+    //    //string ii = "12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871";
+    //    //string ii = "1236998110188786567180";
+    //    //string ii = "1530164324610629353625736427547608653152400";
+    //    //string ii = "121233111221212123344556434343654344444221";
+    //    //string ii = "111";
+    //    //string ii = "199999999999991119990000003232";
+    //    //cin>>ii;
+    //    BigInteger P ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
+    //    //BigInteger i ("14");
+    //    //BigInteger i ("1");
+    //    //ii = "2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473";
+    //    //ii = "121222222222222222121212";
+    //    //ii = "76508367834915852";
+    //    //ii = "19999992123211111";
+    //    //ii = "20650";
+    //    //ii = "20650";
+    //    //ii = "11292929";
+    //    //cin>>ii;
+    //    //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
+    //    //BigInteger i4 ("11292929");
+    //    //BigInteger i2 ("12369571528747655798110188786567180759626910465726920556567298659370399748072366507234899432827475865189642714067836207300153035059472237275816384410077871");
+    //    BigInteger Q ("2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473");
+    //    BigInteger E ("65537");
+    //    //BigInteger i3 = i.ExtendedEculidInverse(i2);
 
-    BigInteger N = P*Q;
-    BigInteger phiN_p = P-BigInteger(1);
-    BigInteger phiN_q = Q-BigInteger(1);
-    BigInteger phiN = phiN_p * phiN_q;
-    BigInteger D = E.ExtendedEculidInverse(phiN);
+//            BigInteger Q("2065420353441994803054315079370635087865508423962173447811880044936318158815802774220405304957787464676771309034463560633713497474362222775683960029689473");
+//                    cout<<Q.MillerRabinPrimalityTest();
 
-    BigInteger msg ("1976620216402300889624482718775150");
-    BigInteger Enc_msg = msg.powerModular(E,N);
-    BigInteger Dec_msg = Enc_msg.powerModular(D,N);
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << "total time: " << elapsed_secs <<"\n";
-    Dec_msg.ShowContent();
+
+        string P_str;
+        cout << "P = "<<endl;
+        cin>>P_str;
+        BigInteger P(P_str);
+
+        string Q_str;
+        cout << "Q = "<<endl;
+        cin>>Q_str;
+        BigInteger Q(Q_str);
+
+        string E_str;
+        cout << "E = "<<endl;
+        cin>>E_str;
+        BigInteger E(E_str);
+
+        clock_t begin = clock();
+
+        cout << "is P prime"<<endl;
+        if(P.MillerRabinPrimalityTest()) cout<<"Yes"<<endl;
+        else cout<<"No"<<endl;
+
+        cout << "is Q prime"<<endl;
+        if(Q.MillerRabinPrimalityTest()) cout<<"Yes"<<endl;
+        else cout<<"No"<<endl;
+
+        cout << "N = "<<endl;
+        BigInteger N = P*Q;
+        N.ShowContent();
+        BigInteger phiN_p = P-BigInteger(1);
+        BigInteger phiN_q = Q-BigInteger(1);
+        BigInteger phiN = phiN_p * phiN_q;
+        cout << "Phi(N) = "<<endl;
+        phiN.ShowContent();
+        BigInteger D = E.ExtendedEculidInverse(phiN);
+        cout << "D = "<<endl;
+        D.ShowContent();
+
+        BigInteger msg ("1976620216402300889624482718775150");
+        cout << "msg = "<<endl;
+        msg.ShowContent();
+        BigInteger Enc_msg = msg.powerModular(E,N);
+        cout << "Encrypted message = "<<endl;
+        Enc_msg.ShowContent();
+        BigInteger Dec_msg = Enc_msg.powerModular(D,N);
+        cout << "Decrypted message = "<<endl;
+        Dec_msg.ShowContent();
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << "total time: " << elapsed_secs <<"\n";
 
     return 0;
 }
